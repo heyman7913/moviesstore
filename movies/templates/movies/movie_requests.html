@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-md-8 mx-auto">
             <h2 class="mb-4">Movie Requests</h2>
-
+            
             <!-- Display Messages -->
             {% if messages %}
                 {% for message in messages %}
@@ -15,7 +15,7 @@
                     </div>
                 {% endfor %}
             {% endif %}
-
+            
             <!-- Request Form -->
             <div class="card mb-4">
                 <div class="card-header">
@@ -36,7 +36,7 @@
                     </form>
                 </div>
             </div>
-
+            
             <!-- User's Requests -->
             <div class="card">
                 <div class="card-header">
@@ -61,7 +61,7 @@
                                             <td>{{ request.description|default:"No description provided" }}</td>
                                             <td>{{ request.requested_at|date:"M d, Y H:i" }}</td>
                                             <td>
-                                                <a href="{% url 'delete_movie_request' request.id %}"
+                                                <a href="{% url 'delete_movie_request' request.id %}" 
                                                    class="btn btn-sm btn-danger"
                                                    onclick="return confirm('Are you sure you want to delete this request?')">
                                                     <i class="fas fa-trash"></i> Delete
