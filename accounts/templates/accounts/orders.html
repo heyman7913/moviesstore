@@ -4,7 +4,12 @@
   <div class="container">
     <div class="row mt-3">
       <div class="col mx-auto mb-3">
-        <h2>My Orders</h2>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2>My Orders</h2>
+          <a href="{% url 'movie_requests' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Request Movies
+          </a>
+        </div>
         <hr />
         {% for order in template_data.orders %}
         <div class="card mb-4">
