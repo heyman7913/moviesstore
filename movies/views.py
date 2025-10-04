@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Movie, Review, MovieRequest
+from .models import Movie, Review, MovieRequest, Petition
+from .forms import PetitionForm
 
 
 # Create your views here.
@@ -96,3 +97,35 @@ def delete_movie_request(request, request_id):
     movie_request.delete()
     messages.success(request, 'Movie request deleted successfully!')
     return redirect('movie_requests')
+
+@login_required
+def petition_list(request):
+    petitions = Petition.objects.all().order_by('-created_at')
+    return render(request, 'movies/petition_list.html', {'petitions': petitions})
+
+@login_required
+def create_petition(request):
+    if request.method == 'POST':
+        form = PetitionForm(request.POST)
+        if form.is_valid():
+            petition = form.save(commit=False)
+            petition.created_by = request.user
+            petition.save()
+            messages.success(request, 'Petition created successfully!')
+            return redirect('petition_list')
+    else:
+        form = PetitionForm()
+    return render(request, 'movies/create_petition.html', {'form': form})
+
+@login_required
+def vote_petition(request, petition_id):
+    petition = get_object_or_404(Petition, id=petition_id)
+
+    if petition.has_user_voted(request.user):
+        petition.voters.remove(request.user)
+        messages.info(request, 'Vote removed!')
+    else:
+        petition.voters.add(request.user)
+        messages.success(request, 'Vote added!')
+
+    return redirect('petition_list')

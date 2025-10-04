@@ -32,3 +32,23 @@ class MovieRequest(models.Model):
 
     def __str__(self):
         return f"{self.title} - {self.user.username}"
+
+class Petition(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    movie_name = models.CharField(max_length=200)
+    director = models.CharField(max_length=100, blank=True)
+    year = models.IntegerField(blank=True, null=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_petitions')
+    created_at = models.DateTimeField(auto_now_add=True)
+    voters = models.ManyToManyField(User, blank=True, related_name='voted_petitions')
+
+    def __str__(self):
+        return f"Petition: {self.movie_name}"
+
+    @property
+    def vote_count(self):
+        return self.voters.count()
+
+    def has_user_voted(self, user):
+        return self.voters.filter(id=user.id).exists()
